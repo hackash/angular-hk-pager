@@ -1,4 +1,4 @@
-(function (window, angular) {
+(function (angular) {
     'use strict';
 
     angular.module('hk.pager', []).factory('Pagination', [function () {
@@ -133,7 +133,7 @@
                 scope.pagination = new Pagination(params).init();
                 console.log('scope.pagination', scope.pagination);
             }
-        }
+        };
     }]);
 
-}(window, angular, undefined));
+}(angular, undefined));

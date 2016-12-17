@@ -15,7 +15,6 @@
     "unused": true,
     "predef": [
         "console",
-        "angular",
-        "$"
+        "angular"
     ]
 }
