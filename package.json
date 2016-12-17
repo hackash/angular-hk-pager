@@ -1,0 +1,40 @@
+{
+  "name": "angular-hk-pager",
+  "version": "0.0.1",
+  "description": "a simple pagination module for angular js",
+  "main": "dist/angular-hk-pager.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "grunt build"
+  },
+  "keywords": [
+    "angular",
+    "pagination",
+    "pager",
+    "async pagination"
+  ],
+  "author": {
+    "name": "Ashot Harutyunyan",
+    "email": "ashot.todo@gmail.com",
+    "url": "https://github.com/hackash"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.4",
+    "grunt-bump": "0.0.13",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-concat": "~0.4.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-uglify": "~0.4.0",
+    "grunt-contrib-watch": "~0.6.0",
+    "grunt-jscs-checker": "^0.4.1",
+    "grunt-ng-annotate": "^0.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hackash/hk-pager"
+  }
+}

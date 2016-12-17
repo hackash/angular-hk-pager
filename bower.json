@@ -1,0 +1,16 @@
+{
+  "name": "angular-hk-pager",
+  "version": "0.0.1",
+  "main": "dist/angular-hk-pager.js",
+  "ignore": [
+    "**/.*",
+    "src",
+    "node_modules",
+    "bower_components",
+    "test",
+    "Gruntfile.coffee"
+  ],
+  "dependencies": {
+    "angular": "*"
+  }
+}
