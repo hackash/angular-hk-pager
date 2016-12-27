@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+    <meta charset="utf-8"/>
+    <title>Example hk.pager (default)</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="../src/hk.pager.js"></script>
+    <script>
+        angular.module('myApp', ['hk.pager']).controller('MainCtrl', function ($scope, Pagination) {
+            $scope.posts = [
+                'post 1',
+                'post 2',
+                'post 3',
+                'post 4',
+                'post 5',
+                'post 6',
+                'post 7',
+                'post 8',
+                'post 9',
+                'post 10',
+                'post 11',
+                'post 12',
+                'post 13',
+                'post 14',
+                'post 15',
+                'post 16',
+                'post 17',
+                'post 18',
+                'post 19',
+                'post 20',
+                'post 21',
+                'post 22',
+                'post 23'
+            ];
+            var pagerParams = {
+                perPage: 10,
+                total: $scope.posts.length,
+                range: 10,
+                page: 1
+            };
+
+            $scope.pagination = new Pagination(pagerParams).init();
+        });
+    </script>
+</head>
+<body ng-controller="MainCtrl">
+<div class="container">
+    <h3>hk.pager example (default)</h3>
+
+    <div class="pull-right">{{pagination.summary}}</div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="post in posts | offset:pagination.offset | limitTo:pagination.perPage track by $index">
+            <td>{{post}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div hk-pager="pagination"></div>
+</div>
+</body>
+</html>

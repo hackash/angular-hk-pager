@@ -3,14 +3,22 @@
 
     angular.module('hk.pager', []).factory('Pagination', [function () {
 
-        var Pagination = function (params) {
+        var Pagination = function (params, mode) {
             this.page = params.page || 1;
+            this.modes = Object.freeze({
+                ASYNC: 'async',
+                DEFAULT: 'default'
+            });
             this.perPage = params.perPage || 10;
             this.pages = [];
             this.prevBtn = false;
             this.nextBtn = false;
             this.range = params.range || 10;
             this.total = params.total;
+            this.items = params.total;
+            this.mode = (mode && angular.isString(mode) && this.modes[mode.toUpperCase()]) ? mode : this.modes.DEFAULT;
+            this.initialized = false;
+            this.asyncPager = angular.noop;
         };
 
         Pagination.prototype.init = function () {
@@ -21,37 +29,86 @@
             this.active = this.page;
             this.generateRange(this.page);
             this.toggleButtons();
+            this.initLimitAndOffset();
+            this.initialized = true;
             return this;
         };
 
         Pagination.prototype.next = function (page) {
             if (page && page <= this.total) {
-                this.active = page;
+                if (this.mode === this.modes.ASYNC) {
+                    this.callAsync(page, page, this.handleNextMetaDataChange);
+                } else {
+                    this.handleNextMetaDataChange(page);
+                }
             } else {
                 if (this.hasNext()) {
-                    this.active += 1;
+                    if (this.mode === this.modes.ASYNC) {
+                        this.callAsync(++this.page, ++this.active, this.handleNextMetaDataChange);
+                    } else {
+                        this.handleNextMetaDataChange(++this.active);
+                    }
                 }
             }
+        };
+
+        Pagination.prototype.callAsync = function (page, active, fn) {
+            fn = angular.isFunction(fn) ? fn.bind(this) : angular.noop;
+            if (angular.isFunction(this.asyncPager)) {
+                this.asyncPager({
+                    offset: this.getFutureOffset(page),
+                    perPage: this.perPage
+                }, function () {
+                    fn(active);
+                }.bind(this));
+            }
+        };
+
+        Pagination.prototype.handleNextMetaDataChange = function (active) {
+            this.active = active;
             if (this.active > this.last) {
                 this.generateRange(this.active, true);
             }
+            this.initLimitAndOffset();
+            this.toggleButtons();
+        };
+
+        Pagination.prototype.handlePreviousMetaDataChange = function (active) {
+            this.active = active;
+            if (this.active < this.first) {
+                this.generateRange(this.active);
+            }
+            this.initLimitAndOffset();
             this.toggleButtons();
         };
 
         Pagination.prototype.previous = function () {
             if (this.hasPrevious()) {
-                this.active -= 1;
-                if (this.active < this.first) {
-                    this.generateRange(this.active);
+                if (this.mode === this.modes.ASYNC) {
+                    this.callAsync(--this.page, --this.active, this.handlePreviousMetaDataChange);
+                } else {
+                    this.handlePreviousMetaDataChange(--this.active);
                 }
-                this.toggleButtons();
             }
         };
 
         Pagination.prototype.generateSummary = function () {
-            var start = Math.max(0, ((this.perPage * this.page) - this.perPage));
+            var start = Math.max(0, ((this.perPage * this.active) - this.perPage));
             var end = start + this.range;
+            if (end > this.items) {
+                end = this.items;
+            }
             this.summary = start + ' - ' + end;
+        };
+
+        Pagination.prototype.getFutureOffset = function (active) {
+            active = active || 0;
+            return active === 1 ? 0 : ((this.perPage * active) - this.perPage);
+        };
+
+        Pagination.prototype.initLimitAndOffset = function () {
+            this.offset = this.active === 1 ? 0 : ((this.perPage * this.active) - this.perPage);
+            this.generateSummary();
         };
 
         Pagination.prototype.update = function (range, decreased) {
@@ -108,10 +165,19 @@
             this.nextBtn = this.hasNext();
         };
 
+        Pagination.prototype.setAsyncHandler = function (fn) {
+            if (angular.isFunction(fn)) {
+                this.asyncPager = fn;
+            }
+        };
+
         return Pagination;
-    }]).directive('hkPager', ['Pagination', function (Pagination) {
+    }]).directive('hkPager', [function () {
         return {
             restrict: 'EA',
+            scope: {
+                hkPager: '='
+            },
             template: '<nav>' +
             '<style> .pagination>li>a.active {background-color: #428bca;border-color: #428bca; color: #fff;}</style>' +
             '<ul class="pagination">' +
@@ -129,11 +195,16 @@
             '</ul>' +
             '</nav>',
             link: function (scope, elem, attrs) {
-                var params = scope.$eval(attrs.hkPager);
-                scope.pagination = new Pagination(params).init();
-                console.log('scope.pagination', scope.pagination);
+                scope.pagination = scope.hkPager;
             }
         };
-    }]);
+    }]).filter('offset', function () {
+        return function (input, idx) {
+            var i = idx, len = input.length, result = [];
+            for (; i < len; i++)
+                result.push(input[i]);
+            return result;
+        };
+    });
 
 }(angular, undefined));
