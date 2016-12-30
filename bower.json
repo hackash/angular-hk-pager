@@ -1,6 +1,6 @@
 {
   "name": "angular-hk-pager",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": "https://github.com/hackash/angular-hk-pager.git",
   "main": "dist/angular-hk-pager.js",
   "description": "a simple lightweight pagination module for angular js",
