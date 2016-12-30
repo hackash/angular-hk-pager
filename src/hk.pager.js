@@ -15,13 +15,13 @@
             this.nextBtn = false;
             this.range = params.range || 10;
             this.total = params.total;
-            this.items = params.total;
             this.mode = (mode && angular.isString(mode) && this.modes[mode.toUpperCase()]) ? mode : this.modes.DEFAULT;
             this.initialized = false;
             this.asyncPager = angular.noop;
         };
 
         Pagination.prototype.init = function () {
+            this.items = this.total;
             this.total = Math.ceil(this.total / this.perPage);
             if (this.page > this.total) {
                 this.page = this.total;
@@ -52,6 +52,16 @@
             }
         };
 
+        Pagination.prototype.previous = function () {
+            if (this.hasPrevious()) {
+                if (this.mode === this.modes.ASYNC) {
+                    this.callAsync(--this.page, --this.active, this.handlePreviousMetaDataChange);
+                } else {
+                    this.handlePreviousMetaDataChange(--this.active);
+                }
+            }
+        };
+
         Pagination.prototype.callAsync = function (page, active, fn) {
             fn = angular.isFunction(fn) ? fn.bind(this) : angular.noop;
             if (angular.isFunction(this.asyncPager)) {
@@ -66,6 +76,7 @@
 
         Pagination.prototype.handleNextMetaDataChange = function (active) {
             this.active = active;
+            this.page = active;
             if (this.active > this.last) {
                 this.generateRange(this.active, true);
             }
@@ -80,16 +91,6 @@
             }
             this.initLimitAndOffset();
             this.toggleButtons();
-        };
-
-        Pagination.prototype.previous = function () {
-            if (this.hasPrevious()) {
-                if (this.mode === this.modes.ASYNC) {
-                    this.callAsync(--this.page, --this.active, this.handlePreviousMetaDataChange);
-                } else {
-                    this.handlePreviousMetaDataChange(--this.active);
-                }
-            }
         };
 
         Pagination.prototype.generateSummary = function () {

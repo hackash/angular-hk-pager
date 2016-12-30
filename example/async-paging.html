@@ -8,7 +8,7 @@
     <script src="../src/hk.pager.js"></script>
     <script>
         angular.module('myApp', ['hk.pager'])
-            .service('Data', function ($q) {
+            .service('Data', function ($q, $timeout) {
                 var posts = [
                     'post 1',
                     'post 2',
@@ -43,7 +43,9 @@
                         if (end > posts.length) {
                             end = posts.length;
                         }
-                        defer.resolve({posts: posts.slice(params.offset, end), total: posts.length});
+                        $timeout(function () {
+                            defer.resolve({posts: posts.slice(params.offset, end), total: posts.length});
+                        }, 1000);
                         return defer.promise;
                     }
                 }
