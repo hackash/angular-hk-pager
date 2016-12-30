@@ -160,7 +160,7 @@
         };
 
         Pagination.prototype.setAsyncHandler = function (fn) {
-            if (angular.isFunction(fn)) {
+            if (this.mode === this.modes.ASYNC && angular.isFunction(fn)) {
                 this.asyncPager = fn;
             }
         };
