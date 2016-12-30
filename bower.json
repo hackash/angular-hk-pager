@@ -2,6 +2,7 @@
   "name": "angular-hk-pager",
   "version": "0.0.1",
   "main": "dist/angular-hk-pager.js",
+  "description": "a simple lightweight pagination module for angular js",
   "ignore": [
     "**/.*",
     "src",

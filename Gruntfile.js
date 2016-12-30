@@ -17,21 +17,11 @@ module.exports = function (grunt) {
         jshint: {
             lib: {
                 options: {
-                    jshintrc: '.jshintrc'
+                    jshintrc: '.jshintrc',
+                    reporterOutput: './jshint.reporter.log'
                 },
                 files: {
                     src: ['src/**/*.js']
-                }
-            }
-        },
-
-        jscs: {
-            src: {
-                options: {
-                    config: '.jscs.json'
-                },
-                files: {
-                    src: ['*.js', 'src/**/*.js']
                 }
             }
         },
@@ -81,5 +71,5 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('default', ['build', 'watch']);
-    grunt.registerTask('build', ['clean', 'jshint', 'jscs', 'concat', 'ngAnnotate', 'uglify']);
+    grunt.registerTask('build', ['clean', 'jshint', 'concat', 'ngAnnotate', 'uglify']);
 };

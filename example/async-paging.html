@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+<head>
+    <meta charset="utf-8"/>
+    <title>Example hk.pager (async)</title>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../src/hk.pager.js"></script>
+    <script>
+        angular.module('myApp', ['hk.pager'])
+            .service('Data', function ($q, $timeout) {
+                var posts = [
+                    'post 1',
+                    'post 2',
+                    'post 3',
+                    'post 4',
+                    'post 5',
+                    'post 6',
+                    'post 7',
+                    'post 8',
+                    'post 9',
+                    'post 10',
+                    'post 11',
+                    'post 12',
+                    'post 13',
+                    'post 14',
+                    'post 15',
+                    'post 16',
+                    'post 17',
+                    'post 18',
+                    'post 19',
+                    'post 20',
+                    'post 21',
+                    'post 22'
+                ];
+                return {
+                    getData: function (params) {
+                        params.offset = params.offset || 0;
+                        params.perPage = params.perPage || 10;
+                        var defer = $q.defer();
+                        var end = params.offset + params.perPage;
+                        if (end > posts.length) {
+                            end = posts.length;
+                        }
+                        $timeout(function () {
+                            defer.resolve({posts: posts.slice(params.offset, end), total: posts.length});
+                        }, 1000);
+                        return defer.promise;
+                    }
+                }
+            })
+            .controller('MainCtrl', function ($scope, Pagination, Data) {
+                var pagerParams = {
+                    perPage: 10,
+                    total: 0,
+                    range: 10,
+                    page: 1
+                };
+
+                $scope.pagination = new Pagination(pagerParams, 'async');
+
+                $scope.getData = function (params, done) {
+                    done = angular.isFunction(done) ? done : angular.noop;
+                    Data.getData(params).then(function (data) {
+                        $scope.posts = data.posts;
+                        if (!$scope.pagination.initialized) {
+                            $scope.pagination.total = data.total;
+                            $scope.pagination.init();
+                        }
+                        done();
+                    });
+                };
+
+                $scope.getData({
+                    offset: $scope.pagination.offset,
+                    perPage: $scope.pagination.perPage
+                });
+
+                $scope.pagination.setAsyncHandler($scope.getData);
+            });
+    </script>
+</head>
+<body ng-controller="MainCtrl">
+<div class="container">
+    <h3>hk.pager example (async)</h3>
+
+    <div class="pull-right">{{pagination.summary}} of {{pagination.items}}</div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Title</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="post in posts track by $index">
+            <td>{{post}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div hk-pager="pagination"></div>
+</div>
+</body>
+</html>
