@@ -36,7 +36,7 @@
 
     function _generateSummary() {
         var start = Math.max(0, ((this.perPage * this.active) - this.perPage));
-        var end = start + this.range;
+        var end = start + this.perPage;
         if (end > this.items) {
             end = this.items;
         }
@@ -99,7 +99,6 @@
             this.pages = [];
             this.prevBtn = false;
             this.nextBtn = false;
-            this.range = params.range || 10;
             this.total = params.total;
             this.mode = (mode && angular.isString(mode) && this.modes[mode.toUpperCase()]) ? mode : this.modes.DEFAULT;
             this.initialized = false;
@@ -111,14 +110,18 @@
             if (!this.initialized) {
                 this.items = this.total;
                 this.total = Math.ceil(this.total / this.perPage);
-                if (this.page > this.total) {
-                    this.page = this.total;
+                if (this.total > 1) {
+                    if (this.page > this.total) {
+                        this.page = this.total;
+                    }
+                    this.active = this.page;
+                    _generateRange.call(this, this.page);
+                    _toggleButtons.call(this);
+                    _initLimitAndOffset.call(this);
+                    this.initialized = true;
+                } else {
+                    throw Error('Page count must be at least 2.')
                 }
-                this.active = this.page;
-                _generateRange.call(this, this.page);
-                _toggleButtons.call(this);
-                _initLimitAndOffset.call(this);
-                this.initialized = true;
             }
             return this;
         };

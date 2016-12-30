@@ -37,7 +37,6 @@ Create an instance of Pagination constructor function
 var pagerParams = {
        perPage: 10,
        total: $scope.posts.length, // entire data length 
-       range: 10, //initial data length
        page: 1
     };
 ```
@@ -92,7 +91,7 @@ $scope.pagination.setAsyncHandler($scope.getData);
 ```
 
 Now every time when you click on next, prev or page buttons, 
-`$scope.getData` function will be invoked with the following params
+`$scope.getData` function will be invoked with the following arguments
 
 ### params (object)
 ```
@@ -136,8 +135,8 @@ Use the `hk-pager` directive to show a pagination controls:
 
 ### examples
 
-* [async](examples/async-paging.html)
-* [default](examples/default-paging.html)
+* [async](example/async-paging.html)
+* [default](example/default-paging.html)
   
   
 
