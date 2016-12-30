@@ -19,7 +19,7 @@
         this.active = active;
         this.page = active;
         if (this.active > this.last) {
-            this.generateRange(this.active, true);
+            _generateRange.call(this, this.active, true);
         }
         _initLimitAndOffset.call(this);
         _toggleButtons.call(this);
@@ -28,7 +28,7 @@
     function _handlePreviousMetaDataChange(active) {
         this.active = active;
         if (this.active < this.first) {
-            this.generateRange(this.active);
+            _generateRange.call(this, this.active);
         }
         _initLimitAndOffset.call(this);
         _toggleButtons.call(this);
@@ -52,7 +52,6 @@
                 end = i + (this.perPage - 1);
                 if (end > this.total) {
                     end = this.total;
-                    i = i - this.perPage;
                 }
             } else {
                 end = start;
@@ -89,6 +88,7 @@
 
     angular.module('hk.pager', []).factory('Pagination', [function () {
 
+        // pagination constructor function
         var Pagination = function (params, mode) {
             this.page = params.page || 1;
             this.modes = Object.freeze({
@@ -106,6 +106,7 @@
             this.asyncPager = angular.noop;
         };
 
+        // public functions
         Pagination.prototype.init = function () {
             if (!this.initialized) {
                 this.items = this.total;
@@ -150,18 +151,6 @@
             }
         };
 
-        Pagination.prototype.update = function (range, decreased) {
-            if (this.range > 0) {
-                this.range = range;
-                this.total = Math.max(0, this.meta.total - decreased);
-                _generateSummary.call(this);
-            }
-        };
-
-        Pagination.prototype.getNextPage = function () {
-            return this.active < this.total ? ++this.active : --this.active;
-        };
-
         Pagination.prototype.hasNext = function () {
             return this.active !== this.total;
         };
@@ -177,7 +166,7 @@
         };
 
         return Pagination;
-    }]).directive('hkPager', [function () {
+    }]).directive('hkPager', ['Pagination', function (Pagination) {
         return {
             restrict: 'EA',
             scope: {
@@ -200,7 +189,11 @@
             '</ul>' +
             '</nav>',
             link: function (scope, elem, attrs) {
-                scope.pagination = scope.hkPager;
+                if (scope.hkPager instanceof Pagination) {
+                    scope.pagination = scope.hkPager;
+                } else {
+                    throw TypeError('Pagination object instance must be passed in.')
+                }
             }
         };
     }]).filter('offset', function () {
@@ -212,4 +205,4 @@
         };
     });
 
-}(angular, undefined));
+}(angular));

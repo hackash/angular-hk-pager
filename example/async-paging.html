@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <title>Example hk.pager (async)</title>
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.8/angular.min.js"></script>
+    <script src="../bower_components/angular/angular.min.js"></script>
     <script src="../src/hk.pager.js"></script>
     <script>
         angular.module('myApp', ['hk.pager'])
@@ -31,8 +31,7 @@
                     'post 19',
                     'post 20',
                     'post 21',
-                    'post 22',
-                    'post 23'
+                    'post 22'
                 ];
                 return {
                     getData: function (params) {
@@ -85,7 +84,7 @@
 <div class="container">
     <h3>hk.pager example (async)</h3>
 
-    <div class="pull-right">{{pagination.summary}}</div>
+    <div class="pull-right">{{pagination.summary}} of {{pagination.items}}</div>
     <table class="table">
         <thead>
         <tr>

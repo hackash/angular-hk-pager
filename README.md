@@ -1,3 +1,3 @@
 # angular-hk-pager
 
-> A simple simple pagination module for angular js
+> A simple lightweight pagination module for angular js
