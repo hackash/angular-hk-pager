@@ -120,7 +120,7 @@
                     _initLimitAndOffset.call(this);
                     this.initialized = true;
                 } else {
-                    throw Error('Page count must be at least 2.')
+                    throw new Error('Page count must be at least 2.');
                 }
             }
             return this;
@@ -191,19 +191,20 @@
             '</li> ' +
             '</ul>' +
             '</nav>',
-            link: function (scope, elem, attrs) {
+            link: function (scope) {
                 if (scope.hkPager instanceof Pagination) {
                     scope.pagination = scope.hkPager;
                 } else {
-                    throw TypeError('Pagination object instance must be passed in.')
+                    throw new TypeError('Pagination object instance must be passed in.');
                 }
             }
         };
     }]).filter('offset', function () {
         return function (input, idx) {
             var i = idx, len = input.length, result = [];
-            for (; i < len; i++)
+            for (; i < len; i++) {
                 result.push(input[i]);
+            }
             return result;
         };
     });

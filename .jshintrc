@@ -13,6 +13,7 @@
     "trailing": true,
     "undef": true,
     "unused": true,
+    "validthis": true,
     "predef": [
         "console",
         "angular"
