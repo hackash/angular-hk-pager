@@ -2,7 +2,7 @@
 
 > A simple lightweight pagination module for angular js
 
-https://travis-ci.org/hackash/hk-pager.svg?branch=master
+[![Build Status](https://travis-ci.org/hackash/hk-pager.svg?branch=master)](https://travis-ci.org/hackash/hk-pager)
 
 ## Installation
 
